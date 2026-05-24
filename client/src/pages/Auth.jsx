@@ -9,7 +9,9 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setUserData } from '../redux/userSlice';
 import { useNavigate } from 'react-router-dom'
-const Auth = () => {
+import { FaTimes } from 'react-icons/fa'
+
+const Auth = ({isModal=false, onClose}) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const handleGoogleSignIn = async() => {
@@ -28,11 +30,16 @@ const Auth = () => {
         }
     }
     return (
-        <div className='w-full min-h-screen bg-[#f3f3f3] flex items-center justify-center px-6 py-20'>
+        <div className={`w-full ${isModal ? '' : 'min-h-screen bg-[#f3f3f3] flex items-center justify-center px-6 py-20'}`}>
             < motion.div
             initial={{opacity:0,y:-40}}
             animate={{opacity:1,y:0}}
-            transition={{duration:1.05,ease:"easeOut"}} className="w-full max-w-md p-8 rounded-3xl bg-white shadow-2xl border border-gray-200">
+            transition={{duration:1.05,ease:"easeOut"}} className={ `w-full ${isModal ? 'max-w-md p-8 rounded-3xl relative'  : 'max-w-lg p-12 rounded-[32px]'} bg-white shadow-2xl border border-gray-200`}>
+                {isModal && onClose && (
+                    <button onClick={onClose} className="absolute top-5 right-5 text-gray-800 hover:text-black text-xl cursor-pointer">
+                        <FaTimes />
+                    </button>
+                )}
                 <div className="flex items-center justify-center gap-3 mb-6">
                     <div className='bg-black text-white p-2 rounded-lg'>
                         <BsRobot size={18} />
