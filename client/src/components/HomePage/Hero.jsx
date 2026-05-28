@@ -1,8 +1,10 @@
 import React from 'react'
 import { motion } from 'motion/react'
 import { HiSparkles } from 'react-icons/hi'
+import { useNavigate } from 'react-router-dom'
 
 const Hero = ({ onStart, onViewHistory }) => {
+  const navigate = useNavigate()
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -41,7 +43,7 @@ const Hero = ({ onStart, onViewHistory }) => {
         <motion.button
           whileHover={{ scale: 1.03, y: -1 }}
           whileTap={{ scale: 0.98 }}
-          onClick={onStart}
+          onClick={()=>navigate('/interview')}
           className='bg-black text-white hover:bg-neutral-800 text-sm md:text-base font-semibold px-8 py-3.5 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer'
         >
           Start Interview

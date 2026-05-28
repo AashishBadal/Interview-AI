@@ -3,8 +3,12 @@ import { motion, moveItem } from 'motion/react'
 import { FaUserTie, FaBriefcase, FaFileArrowUp, FaMicrophone, FaChartLine, FaList } from 'react-icons/fa6'
 import axios from 'axios'
 import { ServerUrl } from '../App'
+import { useDispatch, useSelector } from 'react-redux'
+import { setUserData } from '../redux/userSlice'
 
-const Step1Setup = () => {
+const Step1Setup = ({ onStart }) => {
+  const {userData}= useSelector((state)=>state.user)
+  const dispatch = useDispatch();
   const [role, setRole] = useState("");
   const [experience, setExperience] = useState("");
   const [mode, setMode] = useState("Technical")
@@ -40,6 +44,34 @@ const Step1Setup = () => {
       setAnalyzing(false);
     }
 
+  }
+
+  const handleStart = async () => {
+    setLoading(true)
+    try {
+      const result = await axios.post(ServerUrl + '/interview/generate-questions', {
+        role,
+        experience,
+        mode,
+        resumeText,
+        projects,
+        skills
+      }, { withCredentials: true });
+      console.log(result.data);
+      if(userData){
+        dispatch(setUserData({
+          ...userData,
+          credits:result.data.creditsLeft
+        }))
+      }
+
+      setLoading(false)
+      onStart(result.data)
+    } catch (error) {
+      console.log("Error response:", error.response?.data || error.message)
+      alert(error.response?.data?.message || "Something went wrong")
+      setLoading(false)
+    }
   }
 
   return (
@@ -188,12 +220,12 @@ const Step1Setup = () => {
             }
 
             <motion.button
-              disabled={!role || !experience}
+            onClick={()=>handleStart()}
+              disabled={!role || !experience || loading}
               whileHover={{ scale: 1.03 }}
               transition={{ duration: 0.5 }}
-              onClick={() => handleStartInterview()}
               className='w-full disabled:opacity-50 px-4 py-2 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-all outline-none'>
-              Start Interview
+              {loading ? "Starting..." : "Start Interview"}
             </motion.button>
 
           </div>

@@ -6,7 +6,7 @@ import Step3Report from '../components/Step3Report';
 const InterviewPage = () => {
     const [step,setStep]=useState(1)
     const [interviewData,setInterviewData]=useState(null)
-    const [reportData,setReportData]=useState(null)
+    // const [reportData,setReportData]=useState(null)
   return (
     <div className='min-h-screen bg-gray-50'>
         {step===1 && <Step1Setup onStart={(data)=>{
@@ -14,7 +14,7 @@ const InterviewPage = () => {
             setStep(2)
         }} />}
         {step===2 && <Step2Interview interviewData={interviewData} onFinish={(report)=>{
-            setReportData(report)
+            setInterviewData(report)
             setStep(3)
         }}/>}
         {step===3 && <Step3Report report={interviewData}/>}
