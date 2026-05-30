@@ -138,11 +138,11 @@ Strict Rules:
 - Questions must feel practical and realistic.
 
 Difficulty progression:
-Question 1 → hard  
-Question 2 → hard  
-Question 3 → hard  
-Question 4 → hard  
-Question 5 → hard  
+Question 1 → easy 
+Question 2 → easy 
+Question 3 → medium 
+Question 4 → medium
+Question 5 → hard 
 
 Make questions based on the candidate’s role, experience,interviewMode, projects, skills, and resume details.
 `
@@ -181,8 +181,8 @@ Make questions based on the candidate’s role, experience,interviewMode, projec
             mode,
             questions: questionsArray.map((q, index) => ({
                 question: q,
-                timeLimit: [120, 120, 120, 120, 120][index],
-                difficulty: ["Hard", "Hard", "Hard", "Hard", "Hard"][index],
+                timeLimit: [60, 60, 90, 90, 120][index],
+                difficulty: ["easy", "easy", "medium", "medium", "Hard"][index],
             })),
         });
 
@@ -344,7 +344,7 @@ export const finishInterview = async (req, res) => {
         const avgCorrectness = totalQuestions ? totalCorrectness / totalQuestions : 0;
 
         interview.finalScore = finalScore;
-        interview.status = "completed";
+        interview.status = "Completed";
         await interview.save();
 
         return res.status(200).json({
@@ -367,5 +367,60 @@ export const finishInterview = async (req, res) => {
 
     } catch (error) {
         return res.status(500).json({ message: `Failed to finish interview ${error}` })
+    }
+}
+
+export const getMyInterviews = async (req, res) => {
+    try {
+        const interviews = await Interview.find({ userId: req.userId })
+            .sort({ createdAt: -1 })
+            .select("role experience mode finalScore status createdAt")
+
+        return res.status(200).json({
+            interviews
+        })
+
+    }
+    catch (error) {
+        return res.status(500).json({ message: `Failed to get your interviews ${error}` })
+    }
+}
+
+export const getInterviewReport = async (req, res) => {
+    try {
+        const interview = await Interview.findById(req.params.id);
+
+        if (!interview) {
+            return res.status(404).json({ message: "Interview not found" });
+        }
+
+        const totalQuestions = interview.questions.length;
+
+        let totalConfidence = 0;
+        let totalCommunication = 0;
+        let totalCorrectness = 0;
+
+        interview.questions.forEach((question) => {
+            totalConfidence += question.confidence || 0;
+            totalCommunication += question.communication || 0;
+            totalCorrectness += question.correctness || 0;
+        })
+
+        const avgConfidence = totalQuestions ? totalConfidence / totalQuestions : 0;
+
+        const avgCommunication = totalQuestions ? totalCommunication / totalQuestions : 0;
+
+        const avgCorrectness = totalQuestions ? totalCorrectness / totalQuestions : 0;
+
+        return res.status(200).json({
+            finalScore: interview.finalScore,
+            confidence: Number(avgConfidence.toFixed(1)),
+            communication: Number(avgCommunication.toFixed(1)),
+            correctness: Number(avgCorrectness.toFixed(1)),
+            questionWiseScore: interview.questions
+        })
+    }
+    catch (error) {
+        return res.status(500).json({ message: `Failed to get interview report ${error}` })
     }
 }
