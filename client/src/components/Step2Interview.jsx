@@ -31,6 +31,7 @@ const Step2Interview = ({ interviewData, onFinish }) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [answer, setAnswer] = useState('')
   const [feedback, setFeedback] = useState('')
+  const [isSpeakingTransition, setIsSpeakingTransition] = useState(false)
 
   const feedbackRef = useRef(feedback);
 
@@ -292,8 +293,10 @@ const Step2Interview = ({ interviewData, onFinish }) => {
     const nextQuestion = questions[currentIndex + 1];
     setTimerLeft(nextQuestion?.timeLimit || 60);
 
+    setIsSpeakingTransition(true);
     await speakText(`Alright. Here is your next question.`)
     setCurrentIndex(currentIndex + 1)
+    setIsSpeakingTransition(false);
   }
 
   const finishInterview = async () =>{
@@ -388,7 +391,7 @@ const Step2Interview = ({ interviewData, onFinish }) => {
         {/*Text section*/}
         <div className='flex p-4 sm:p-6 md:p-8 relative flex-col flex-1'>
           <h2 className='text-xl sm:text-2xl font-bold text-emerald-600 mb-6'>AI Smart Interview</h2>
-          {!isIntroPhase && (<div className='relative mb-6 bg-gray-50 p-4 sm:p-6 rounded-2xl border border-gray-200 shadow-sm'><p className=' text-xs sm:text-sm text-gray-400 mb-2 '>Question {currentIndex + 1} of {questions?.length}</p>
+          {!isIntroPhase && !isSpeakingTransition && (<div className='relative mb-6 bg-gray-50 p-4 sm:p-6 rounded-2xl border border-gray-200 shadow-sm'><p className=' text-xs sm:text-sm text-gray-400 mb-2 '>Question {currentIndex + 1} of {questions?.length}</p>
             <div className='text-base sm:text-lg font-semibold text-gray-800 leading-relaxed pr-16'>
               {currentQuestion?.question}
             </div>
@@ -425,7 +428,13 @@ const Step2Interview = ({ interviewData, onFinish }) => {
               <button
               onClick={handleNext}
                className='w-full bg-gradient-to-r from-emerald-600 to-teal-500 text-white py-3 rounded-xl shadow-md hover:opacity-90 transition cursor-pointer flex items-center justify-center gap-1'>
-            Next Question <FaArrowRight size={18} />
+                {currentIndex + 1 >= questions.length ? (
+                  "Finish Interview"
+                ) : (
+                  <>
+                    Next Question <FaArrowRight size={18} />
+                  </>
+                )}
               </button>
             </motion.div>
           )}
