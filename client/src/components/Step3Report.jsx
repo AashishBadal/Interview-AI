@@ -20,12 +20,8 @@ const Step3Report = ({ report }) => {
   const navigate = useNavigate()
   if (!report) {
     return (
-      <div
-        className="min-h-screen flex items-center justify-center"
-      >
-        <p className='text-gray-500 text-lg'>
-          Loading Report
-        </p>
+      <div className="min-h-screen bg-bg flex items-center justify-center">
+        <p className='label-mono animate-pulse'>loading report…</p>
       </div>
     )
   }
@@ -249,125 +245,136 @@ const Step3Report = ({ report }) => {
   }
 
   return (
-    <div className='min-h-screen bg-linear-to-br from-gray-50 to-green-50 px-4 sm:px-6 lg:px-10 py-8'>
-      <div className='mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
-        <div className="md:mb-10 w-full flex items-start gap-4">
-          <button
-            onClick={() => navigate('/history')}
-            className='mt-1 p-3 rounded-full bg-white shadow hover:shadow-md transition cursor-pointer'><FaArrowLeft className='text-gray-700' /></button>
-          <div>
-            <h1 className='text-4xl font-bold flex-nowrap'>Interview Analytics Dashboard</h1>
-            <p className=' text-gray-500 mt-2'>Comprehensive breakdown of your interview performance</p>
+    <div className='min-h-screen bg-bg text-ink px-4 sm:px-6 lg:px-10 py-8 relative overflow-hidden'>
+      <div className='pointer-events-none absolute top-[-15%] right-[-5%] w-[50vw] h-[50vh] rounded-full bg-accent/8 blur-[150px]' />
+      <div className='relative z-10'>
+        <div className='mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
+          <div className="w-full flex items-start gap-4">
+            <button
+              onClick={() => navigate('/history')}
+              className='mt-1 w-11 h-11 flex items-center justify-center rounded-full bg-surface border border-line hover:border-line-strong transition cursor-pointer'><FaArrowLeft className='text-muted' /></button>
+            <div>
+              <span className='label-mono'>step 03 / report</span>
+              <h1 className='font-display text-3xl sm:text-4xl font-semibold tracking-tight mt-2'>Interview Analytics</h1>
+              <p className='text-muted mt-1.5 text-sm'>Comprehensive breakdown of your interview performance</p>
+            </div>
           </div>
+
+          <button onClick={downloadPDF} className='btn-accent py-3 px-6 text-sm text-nowrap'>Download PDF</button>
         </div>
 
-        <button onClick={downloadPDF} className='bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl shadow-md transition-all duration-300 font-semibold text-sm sm:text-base text-nowrap cursor-pointer px-6'>Download PDF</button>
+        <div className='grid grid-cols-1 lg:grid-cols-3 gap-5'>
+          <div className='space-y-5'>
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              className='card p-7 text-center'>
+              <h2 className="label-mono mb-6">overall performance</h2>
+              <div className='relative w-28 h-28 mx-auto'>
+                <CircularProgressbar
+                  value={percentage}
+                  text={`${score}/10`}
+                  styles={buildStyles({
+                    textSize: "20px",
+                    pathColor: "#c6f24e",
+                    textColor: "#fafafa",
+                    trailColor: "rgba(255,255,255,0.08)",
+                    strokeLinecap: "round",
+                  })}
+                />
+              </div>
+              <div className='mt-6 pt-5 border-t border-line'>
+                <p className='font-display text-lg font-semibold text-accent'>{performanceText}</p>
+                <p className='text-muted mt-1.5 text-sm'>{shortTagline}</p>
+              </div>
+            </motion.div>
 
-      </div>
-      <div className='grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8'>
-        <div className='space-y-6'>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className='bg-white rounded-2xl sm:rounded-3xl shadow-lg p-6 sm:p-8 text-center'>
-            <h1 className="text-2xl font-semibold text-gray-800 mb-4">Overall Performance</h1>
-            <div className='relative w-20 h-20 sm:w-25 sm:h-25 mx-auto'>
-              <CircularProgressbar
-                value={percentage}
-                text={`${score}/10`}
-                styles={buildStyles({
-                  textSize: "20px",
-                  pathColor: "#3b82f6",
-                  textColor: "#333",
-                  trailColor: "#e5e7eb",
-                })}
-              />
-            </div>
-            <div className='bg-linear-to-br from-gray-50 to-green-50 rounded-2xl sm:rounded-3xl shadow-lg p-6 sm:p-8 text-center'>
-
-              <p className='text-lg font-semibold'>{performanceText}</p>
-              <p className='text-gray-600 mt-2 text-lg font-semibold'>{shortTagline}</p>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className='bg-white rounded-2xl sm:rounded-3xl shadow-lg p-6 sm:p-8'>
-            <h3 className='text-base sm:text-lg font-semibold text-gray-700 mb-6'>Skill Evaluation</h3>
-            <div className='space-y-4'>
-              {
-                skills.map((skill, index) => (
-                  <div key={index} >
-                    <div className='flex text-sm justify-between mb-1 sm:text-base'>
-                      <span className='text-gray-600 font-medium'>{skill.label}</span>
-                      <span className='text-green-500 font-semibold'>{skill.value}</span>
-
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              className='card p-7'>
+              <h3 className='label-mono mb-6'>skill evaluation</h3>
+              <div className='space-y-5'>
+                {skills.map((skill, index) => (
+                  <div key={index}>
+                    <div className='flex text-sm justify-between mb-2'>
+                      <span className='text-muted font-medium'>{skill.label}</span>
+                      <span className='text-accent font-mono font-semibold'>{skill.value}/10</span>
                     </div>
-
-                    <div className='bg-gray-200 h-2 sm:h-3 rounded-full'>
-                      <div className='bg-green-500 h-full rounded-full' style={{ width: `${skill.value * 10}%` }}>
-
-                      </div>
-
+                    <div className='bg-surface-3 h-2 rounded-full overflow-hidden'>
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${skill.value * 10}%` }}
+                        transition={{ duration: 0.8, ease: 'easeOut' }}
+                        className='bg-accent h-full rounded-full' />
                     </div>
-
                   </div>
-                ))
-              }
-            </div>
-          </motion.div>
-        </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
 
-        <div className='lg:col-span-2 space-y-6'>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className='bg-white rounded-2xl sm:rounded-3xl shadow-lg p-6 sm:p-8 '>
-            <h3 className='text-base sm:text-lg font-semibold text-gray-700 sm:mb-6 mb-4'>Performance Trend</h3>
-            <div className='h-64 sm:h-72'>
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={questionScoreData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis domain={[0, 10]} />
-                  <Tooltip />
-                  <Area type="monotone" dataKey="score" stroke="#22c55e" fill="#bbf7d0" />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className='bg-white rounded-2xl sm:rounded-3xl shadow-lg p-5 sm:p-8 '
-          >
-            <h3 className='text-base sm:text-lg font-semibold text-gray-700 sm:mb-6 mb-4'>Question Breakdown</h3>
-            <div className='space-y-4'>
-              {
-                questionWiseScore.map((question, index) => (
-                  <div key={index} className='bg-gray-50 p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-gray-200'>
+          <div className='lg:col-span-2 space-y-5'>
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              className='card p-6 sm:p-7'>
+              <h3 className='label-mono mb-6'>performance trend</h3>
+              <div className='h-64 sm:h-72'>
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={questionScoreData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="scoreFill" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#c6f24e" stopOpacity={0.35} />
+                        <stop offset="100%" stopColor="#c6f24e" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" />
+                    <XAxis dataKey="name" stroke="#56565f" tick={{ fontSize: 12, fontFamily: 'JetBrains Mono' }} />
+                    <YAxis domain={[0, 10]} stroke="#56565f" tick={{ fontSize: 12, fontFamily: 'JetBrains Mono' }} />
+                    <Tooltip
+                      contentStyle={{ background: '#16161c', border: '1px solid rgba(255,255,255,0.16)', borderRadius: 12, color: '#fafafa' }}
+                      cursor={{ stroke: 'rgba(198,242,78,0.4)' }} />
+                    <Area type="monotone" dataKey="score" stroke="#c6f24e" strokeWidth={2.5} fill="url(#scoreFill)" />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              className='card p-5 sm:p-7'>
+              <h3 className='label-mono mb-6'>question breakdown</h3>
+              <div className='space-y-4'>
+                {questionWiseScore.map((question, index) => (
+                  <div key={index} className='bg-surface-2 p-5 rounded-2xl border border-line'>
                     <div className='flex flex-col sm:flex-row justify-between sm:items-start gap-3 mb-4'>
-                      <div className=''>
-                        <p className='text-xs text-gray-400'>Question {index + 1}</p>
-                        <p className='font-semibold text-gray-800 text-sm sm:text-base leading-relaxed'>{question.question}</p>
+                      <div>
+                        <p className='label-mono mb-1'>question {index + 1}</p>
+                        <p className='font-semibold text-ink text-sm sm:text-base leading-relaxed'>{question.question}</p>
                       </div>
-                      <div className='bg-green-100 text-green-600 px-3 py-1 rounded-full font-bold text-xs sm:text-sm w-fit'>
+                      <div className='bg-accent-soft text-accent px-3 py-1 rounded-full font-mono font-semibold text-xs sm:text-sm w-fit shrink-0'>
                         {question.score}/10
                       </div>
                     </div>
 
-                    <div className='bg-green-50 border border-green-200 p-4 rounded-lg'>
-                      <p className='text-sm font-semibold text-green-800 mb-1 '>AI FEEDBACK </p>
-                      <p className='text-sm text-gray-700 leading-relaxed'>{question.feedback && question.feedback.trim() !== "" ? question.feedback : "No feedback available"}</p>
-
+                    <div className='bg-surface border border-line p-4 rounded-xl'>
+                      <p className='label-mono !text-accent/80 mb-2'>ai feedback</p>
+                      <p className='text-sm text-muted leading-relaxed'>{question.feedback && question.feedback.trim() !== "" ? question.feedback : "No feedback available"}</p>
                     </div>
 
+                    {question.suggestedAnswer && question.suggestedAnswer.trim() !== "" && (
+                      <div className='bg-surface border border-line p-4 rounded-xl mt-3'>
+                        <p className='label-mono !text-accent/80 mb-2'>suggested answer</p>
+                        <p className='text-sm text-muted leading-relaxed'>{question.suggestedAnswer}</p>
+                      </div>
+                    )}
                   </div>
-                ))
-              }
-            </div>
-          </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
         </div>
       </div>
     </div>

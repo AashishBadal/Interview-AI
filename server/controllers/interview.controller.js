@@ -199,6 +199,38 @@ Make questions based on the candidate’s role, experience,interviewMode, projec
     }
 };
 
+// Generates a concise, strong model answer for a question — used as a
+// "suggested answer" the candidate can study before retrying.
+const buildSuggestedAnswer = async (questionText) => {
+    try {
+        const messages = [
+            {
+                role: "system",
+                content: `
+You are an expert interview coach.
+
+Given an interview question, write ONE strong example answer that a top candidate could give.
+
+Rules:
+- 40 to 80 words.
+- Natural, first-person spoken English.
+- Specific and well structured, no preamble or labels.
+- Return ONLY the answer text.
+`
+            },
+            {
+                role: "user",
+                content: `Question: ${questionText}`
+            }
+        ];
+        const aiResponse = await askAi(messages);
+        return (aiResponse || "").trim();
+    } catch (error) {
+        console.error("Error building suggested answer:", error);
+        return "";
+    }
+}
+
 export const submitAnswer = async (req, res) => {
     try {
         const { answer, questionIndex, interviewId, timeTaken } = req.body
@@ -211,15 +243,19 @@ export const submitAnswer = async (req, res) => {
 
         const question = interview.questions[questionIndex]
 
+        question.attempts = (question.attempts || 0) + 1;
+
         if (!answer) {
             question.score = 0;
             question.feedback = "You did not submit an answer"
             question.answer = ""
+            question.suggestedAnswer = await buildSuggestedAnswer(question.question);
 
             await interview.save();
 
             return res.json({
-                feedback: question.feedback
+                feedback: question.feedback,
+                suggestedAnswer: question.suggestedAnswer
             });
         }
 
@@ -227,11 +263,13 @@ export const submitAnswer = async (req, res) => {
             question.score = 0;
             question.feedback = "Time limit exceeded. No score awarded.";
             question.answer = answer;
+            question.suggestedAnswer = await buildSuggestedAnswer(question.question);
 
             await interview.save();
 
             return res.json({
-                feedback: question.feedback
+                feedback: question.feedback,
+                suggestedAnswer: question.suggestedAnswer
             })
         }
 
@@ -268,6 +306,11 @@ Feedback Rules:
 - Do NOT explain scoring.
 - Keep tone professional and honest.
 
+Suggested Answer Rules:
+- Also provide a strong example answer the candidate could have given.
+- 40 to 80 words, natural first-person spoken English.
+- Specific and well structured, no preamble or labels.
+
 Return ONLY valid JSON in this format:
 
 {
@@ -275,7 +318,8 @@ Return ONLY valid JSON in this format:
   "communication": number,
   "correctness": number,
   "finalScore": number,
-  "feedback": "short human feedback"
+  "feedback": "short human feedback",
+  "suggestedAnswer": "a strong concise example answer to the question"
 }
 `
             }
@@ -300,11 +344,13 @@ Answer: ${answer}
         question.correctness = parsed.correctness;
         question.score = parsed.finalScore;
         question.feedback = parsed.feedback;
+        question.suggestedAnswer = parsed.suggestedAnswer || await buildSuggestedAnswer(question.question);
 
         await interview.save();
 
         return res.status(200).json({
-            feedback: parsed.feedback
+            feedback: parsed.feedback,
+            suggestedAnswer: question.suggestedAnswer
         });
 
     } catch (error) {
@@ -359,7 +405,8 @@ export const finishInterview = async (req, res) => {
                     confidence: q.confidence || 0,
                     communication: q.communication || 0,
                     correctness: q.correctness || 0,
-                    feedback: q.feedback || ""
+                    feedback: q.feedback || "",
+                    suggestedAnswer: q.suggestedAnswer || ""
                 }
             ))
 
@@ -383,6 +430,49 @@ export const getMyInterviews = async (req, res) => {
     }
     catch (error) {
         return res.status(500).json({ message: `Failed to get your interviews ${error}` })
+    }
+}
+
+// Loads a full interview so an incomplete one can be resumed mid-way.
+export const getInterviewToResume = async (req, res) => {
+    try {
+        const interview = await Interview.findOne({ _id: req.params.id, userId: req.userId });
+
+        if (!interview) {
+            return res.status(404).json({ message: "Interview not found" });
+        }
+
+        const user = await User.findById(req.userId).select("name");
+
+        // answers are filled in order, so the first unanswered question is the resume point
+        const answeredCount = interview.questions.filter(
+            (q) => q.answer && q.answer.trim() !== ""
+        ).length;
+        const resumeIndex = Math.min(answeredCount, interview.questions.length - 1);
+
+        return res.status(200).json({
+            interviewId: interview._id,
+            userName: user?.name || "",
+            questions: interview.questions,
+            resumeIndex,
+            status: interview.status,
+        });
+    } catch (error) {
+        return res.status(500).json({ message: `Failed to load interview ${error}` });
+    }
+}
+
+export const deleteInterview = async (req, res) => {
+    try {
+        const interview = await Interview.findOneAndDelete({ _id: req.params.id, userId: req.userId });
+
+        if (!interview) {
+            return res.status(404).json({ message: "Interview not found" });
+        }
+
+        return res.status(200).json({ message: "Interview deleted", id: req.params.id });
+    } catch (error) {
+        return res.status(500).json({ message: `Failed to delete interview ${error}` });
     }
 }
 

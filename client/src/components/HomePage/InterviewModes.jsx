@@ -1,88 +1,58 @@
 import React from 'react'
 import { motion } from 'motion/react'
+import { HiArrowUpRight } from 'react-icons/hi2'
 import hrImg from '../../assets/HR.png'
 import techImg from '../../assets/tech.png'
 import confiImg from '../../assets/confi.png'
 import creditImg from '../../assets/credit.png'
+import { SectionHeading } from './Steps'
+
+const modes = [
+  { img: techImg, no: '01', title: 'Technical', body: 'Deep, role-specific technical questioning.' },
+  { img: hrImg, no: '02', title: 'HR & Behavioral', body: 'Communication and situational evaluation.' },
+  { img: confiImg, no: '03', title: 'Confidence detection', body: 'Tone and delivery insights from your voice.' },
+  { img: creditImg, no: '04', title: 'Credit system', body: 'Unlock premium sessions on demand.' },
+]
 
 const InterviewModes = () => {
   return (
-    <>
-      {/* Multiple Interview Modes Section */}
-      <h2 className='text-3xl md:text-5xl font-bold text-gray-900 text-center tracking-tight mb-12 mt-12 md:mt-16'>
-        Multiple Interview <span className='text-[#10b981]'>Modes</span>
-      </h2>
+    <div className='w-full max-w-5xl mt-28 md:mt-40 px-2'>
+      <SectionHeading
+        index='// 03'
+        label='interview modes'
+        title='One engine. Many rooms.'
+      />
 
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl w-full px-4 pb-12'>
-        {/* Card 1 */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className='bg-white rounded-3xl p-6 md:p-8 border border-gray-200/50 shadow-md hover:shadow-xl hover:border-[#10b981]/50 transition-all duration-300 flex flex-row items-center justify-between gap-6'
-        >
-          <div className='flex-1 flex flex-col text-left'>
-            <h3 className='font-bold text-gray-900 text-lg mb-2'>HR Interview Mode</h3>
-            <p className='text-gray-500 text-sm leading-relaxed'>Behavioral and communication based evaluation.</p>
-          </div>
-          <div className='w-24 md:w-32 flex justify-end shrink-0'>
-            <img src={hrImg} alt="HR Interview Mode" className='w-full h-auto object-contain' />
-          </div>
-        </motion.div>
+      <div className='border-t border-line'>
+        {modes.map((mode, i) => (
+          <motion.div
+            key={mode.title}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.5, delay: i * 0.06 }}
+            className='group flex items-center gap-5 md:gap-8 py-6 md:py-7 border-b border-line cursor-default'
+          >
+            <span className='font-mono text-sm text-faint group-hover:text-accent transition-colors w-8 shrink-0'>{mode.no}</span>
 
-        {/* Card 2 */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className='bg-white rounded-3xl p-6 md:p-8 border border-gray-200/50 shadow-md hover:shadow-xl hover:border-[#10b981]/50 transition-all duration-300 flex flex-row items-center justify-between gap-6'
-        >
-          <div className='flex-1 flex flex-col text-left'>
-            <h3 className='font-bold text-gray-900 text-lg mb-2'>Technical Mode</h3>
-            <p className='text-gray-500 text-sm leading-relaxed'>Deep technical questioning based on selected role.</p>
-          </div>
-          <div className='w-24 md:w-32 flex justify-end shrink-0'>
-            <img src={techImg} alt="Technical Mode" className='w-full h-auto object-contain' />
-          </div>
-        </motion.div>
+            {/* reveal thumbnail */}
+            <div className='shrink-0 w-0 md:group-hover:w-16 w-16 md:w-0 overflow-hidden transition-all duration-300'>
+              <div className='w-16 h-16 rounded-xl bg-gradient-to-br from-zinc-100 to-zinc-300 flex items-center justify-center'>
+                <img src={mode.img} alt='' className='w-10 h-10 object-contain' />
+              </div>
+            </div>
 
-        {/* Card 3 */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className='bg-white rounded-3xl p-6 md:p-8 border border-gray-200/50 shadow-md hover:shadow-xl hover:border-[#10b981]/50 transition-all duration-300 flex flex-row items-center justify-between gap-6'
-        >
-          <div className='flex-1 flex flex-col text-left'>
-            <h3 className='font-bold text-gray-900 text-lg mb-2'>Confidence Detection</h3>
-            <p className='text-gray-500 text-sm leading-relaxed'>Basic tone and voice analysis insights.</p>
-          </div>
-          <div className='w-24 md:w-32 flex justify-end shrink-0'>
-            <img src={confiImg} alt="Confidence Detection" className='w-full h-auto object-contain' />
-          </div>
-        </motion.div>
+            <h3 className='font-display text-2xl md:text-4xl font-semibold tracking-tight text-muted group-hover:text-ink transition-colors flex-1'>
+              {mode.title}
+            </h3>
 
-        {/* Card 4 */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className='bg-white rounded-3xl p-6 md:p-8 border border-gray-200/50 shadow-md hover:shadow-xl hover:border-[#10b981]/50 transition-all duration-300 flex flex-row items-center justify-between gap-6'
-        >
-          <div className='flex-1 flex flex-col text-left'>
-            <h3 className='font-bold text-gray-900 text-lg mb-2'>Credits System</h3>
-            <p className='text-gray-500 text-sm leading-relaxed'>Unlock premium interview sessions easily.</p>
-          </div>
-          <div className='w-24 md:w-32 flex justify-end shrink-0'>
-            <img src={creditImg} alt="Credits System" className='w-full h-auto object-contain' />
-          </div>
-        </motion.div>
+            <p className='hidden sm:block text-sm text-muted max-w-[220px] text-right'>{mode.body}</p>
+
+            <HiArrowUpRight className='text-faint group-hover:text-accent group-hover:translate-x-1 group-hover:-translate-y-1 transition-all shrink-0' size={22} />
+          </motion.div>
+        ))}
       </div>
-    </>
+    </div>
   )
 }
 

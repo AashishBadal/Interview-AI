@@ -6,6 +6,8 @@ const questionSchema = new mongoose.Schema({
     timeLimit: Number,
     answer: String,
     feedback: String,
+    suggestedAnswer: String,
+    attempts: { type: Number, default: 0 },
     score: { type: Number, default: 0 },
     confidence: { type: Number, default: 0 },
     communication: { type: Number, default: 0 },
@@ -35,6 +37,7 @@ const interviewSchema = new mongoose.Schema({
         type: String,
     },
     questions: [questionSchema],
+    
 
     finalScore:{
         type:Number,

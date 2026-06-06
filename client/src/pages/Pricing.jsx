@@ -102,7 +102,7 @@ const Pricing = () => {
           }
         },
         theme: {
-          color: "#10b981"
+          color: "#c6f24e"
         }
       }
       const rzp = new window.Razorpay(options);
@@ -117,76 +117,66 @@ const Pricing = () => {
     }
   }
   return (
-    <div className='min-h-screen lg:h-screen w-full flex flex-col justify-center items-center bg-gradient-to-br from-gray-50 to-emerald-50 py-6 px-4 overflow-y-auto'>
-      <div className='w-full max-w-6xl'>
-        <div className='relative w-full mb-10 flex items-center justify-center px-4 md:px-0'>
-          <button onClick={() => navigate("/")} className='absolute left-4 md:left-0 p-3 rounded-full bg-white shadow hover:shadow-md transition hover:scale-105'>
-            <FaArrowLeft className='text-gray-700' />
+    <div className='min-h-screen w-full flex flex-col justify-center items-center bg-bg text-ink py-12 px-4 relative overflow-hidden'>
+      <div className='pointer-events-none absolute top-[-20%] left-1/2 -translate-x-1/2 w-[70vw] h-[55vh] rounded-full bg-accent/10 blur-[150px]' />
+      <div className='pointer-events-none absolute inset-0 bg-grid opacity-40' />
+      <div className='relative z-10 w-full max-w-6xl'>
+        <div className='relative w-full mb-12 flex items-center justify-center px-4 md:px-0'>
+          <button onClick={() => navigate("/")} className='absolute left-4 md:left-0 w-11 h-11 flex items-center justify-center rounded-full bg-surface border border-line hover:border-line-strong transition'>
+            <FaArrowLeft className='text-muted' />
           </button>
           <div className='text-center'>
-            <h1 className='text-4xl font-bold text-gray-900 mb-2'>
-              Choose Your Plan
+            <span className='label-mono'>pricing</span>
+            <h1 className='font-display text-4xl md:text-5xl font-semibold tracking-tight mt-3 mb-2'>
+              Choose your plan
             </h1>
-            <p className='text-gray-600'>
+            <p className='text-muted'>
               Flexible pricing to match your interview preparation goals
             </p>
           </div>
         </div>
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-8 w-full'>
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-6 w-full'>
           {plans.map((plan, index) => {
             const isSelected = selectedPlan === plan.id;
             return (
-
               <motion.div
                 key={plan.id}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
-                whileHover={!plan.default ? {
-                  y: -8,
-                  scale: 1.02,
-                  boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)"
-                } : {
-                  scale: 1.01
-                }}
-                whileTap={!plan.default ? { scale: 0.98 } : undefined}
+                whileHover={!plan.default ? { y: -6 } : undefined}
+                whileTap={!plan.default ? { scale: 0.99 } : undefined}
                 onClick={() => !plan.default && setSelectedPlan(plan.id)}
-                className={`bg-white rounded-2xl p-8 shadow-lg relative ${!plan.default ? "cursor-pointer" : ""
-                  } ${isSelected ? "border-4 border-emerald-500" : "border border-gray-200 hover:border-emerald-300"}`}
+                className={`relative card p-8 transition-colors ${!plan.default ? "cursor-pointer" : ""} ${isSelected ? "!border-accent bg-surface-2" : "hover:border-line-strong"}`}
               >
                 {plan.badge && (
-                  <div className='absolute top-0 right-0 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-bl-2xl rounded-tr-2xl'>
+                  <div className='absolute -top-3 right-6 bg-accent text-bg text-[10px] font-mono font-semibold uppercase tracking-wider px-3 py-1 rounded-full'>
                     {plan.badge}
                   </div>
                 )}
-                <h2 className='text-2xl font-bold text-gray-900 mb-2'>
+                <h2 className='font-display text-2xl font-semibold mb-2'>
                   {plan.name}
                 </h2>
-                <p className='text-gray-600'>
+                <p className='text-muted text-sm'>
                   {plan.description}
                 </p>
-                <div className='my-6'>
+                <div className='my-6 flex items-baseline gap-1'>
                   {plan.price === 0 ? (
-                    <span className='text-4xl font-bold text-gray-900'>Free</span>
+                    <span className='font-display text-4xl font-semibold'>Free</span>
                   ) : (
-                    <span className='text-4xl font-bold text-gray-900'>
-                      ₹{plan.price}
-                    </span>
+                    <span className='font-display text-4xl font-semibold'>₹{plan.price}</span>
                   )}
                 </div>
-                <div className='mb-6'>
-                  <span className='text-3xl font-bold text-gray-900'>
-                    {plan.credits}
-                  </span>
-                  <span className='text-gray-500 ml-1'>
-                    credits
-                  </span>
+                <div className='mb-6 flex items-baseline gap-2'>
+                  <span className='font-display text-3xl font-semibold text-accent'>{plan.credits}</span>
+                  <span className='label-mono'>credits</span>
                 </div>
-                <ul className='space-y-2 mb-6'>
+                <div className='h-px bg-line mb-6' />
+                <ul className='space-y-3 mb-7'>
                   {plan.features.map((feature) => (
-                    <li key={feature} className='flex items-center gap-2'>
-                      <FaCheckCircle className='text-emerald-500' />
-                      <span className='text-gray-600'>{feature}</span>
+                    <li key={feature} className='flex items-center gap-2.5'>
+                      <FaCheckCircle className='text-accent shrink-0' size={15} />
+                      <span className='text-muted text-sm'>{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -202,15 +192,15 @@ const Pricing = () => {
                       handlePayment(plan)
                     }
                   }}
-                  className={`w-full py-3 rounded-lg text-lg font-bold transition-all duration-300 ${plan.default
-                    ? "bg-emerald-600 text-white hover:bg-emerald-700"
+                  className={`w-full py-3 rounded-full text-[15px] font-semibold transition-all duration-200 ${plan.default
+                    ? "btn-accent"
                     : isSelected
-                      ? "bg-gray-900 text-white hover:bg-gray-800"
-                      : "bg-gray-200 text-gray-400 cursor-not-allowed opacity-60"
+                      ? "btn-accent"
+                      : "bg-surface-2 text-faint border border-line cursor-not-allowed"
                     }`}
                 >
                   {loadingPlan === plan.id ? (
-                    "Processing..."
+                    "Processing…"
                   ) : plan.price === 0 ? (
                     "Get Started Free"
                   ) : (

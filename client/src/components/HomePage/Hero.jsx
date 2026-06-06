@@ -1,63 +1,98 @@
 import React from 'react'
 import { motion } from 'motion/react'
-import { HiSparkles } from 'react-icons/hi'
+import { HiArrowUpRight } from 'react-icons/hi2'
 import { useNavigate } from 'react-router-dom'
+import LiveInterview from './LiveInterview'
 
-const Hero = ({ onStart, onViewHistory }) => {
+const Hero = ({ onViewHistory }) => {
   const navigate = useNavigate()
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      className='text-center max-w-4xl mx-auto'
-    >
-      {/* Badge */}
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.2, duration: 0.6 }}
-        className='inline-flex items-center gap-2 bg-white border border-gray-200/80 px-4 py-2 rounded-full shadow-sm mb-8 hover:shadow-md transition-shadow duration-300'
+    <div className='relative w-full max-w-6xl mx-auto flex flex-col items-center text-center pb-4'>
+      {/* status pill */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className='inline-flex items-center gap-2.5 border border-line rounded-full pl-2.5 pr-4 py-1.5 mb-9 bg-surface/60 backdrop-blur'
       >
-        <HiSparkles size={16} className='text-[#10b981]' />
-        <span className='text-gray-600 text-xs md:text-sm font-medium'>
-          AI Powered Smart Interview Platform
+        <span className='relative flex h-2 w-2'>
+          <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-70' />
+          <span className='relative inline-flex rounded-full h-2 w-2 bg-accent' />
         </span>
+        <span className='label-mono !text-faint !text-[10px]'>voice-first ai interview engine</span>
       </motion.div>
 
-      {/* Heading */}
-      <h1 className='text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 tracking-tight leading-tight md:leading-none mb-6'>
-        Practice Interviews with <br />
-        <span className='bg-[#e6fcf5] text-[#0ca678] border border-[#c3fae8] px-6 py-2 rounded-full inline-block mt-4 font-semibold text-[0.8em] md:text-[0.75em] shadow-sm'>
-          AI Intelligence
+      {/* mega headline */}
+      <motion.h1
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: 'easeOut' }}
+        className='font-display font-semibold tracking-tight leading-[0.9] text-[clamp(2.75rem,8vw,6.5rem)] text-balance max-w-4xl'
+      >
+        Interview like it's
+        <br className='hidden sm:block' />{' '}
+        <span className='relative inline-block text-gradient-accent'>
+          the real thing
+          <svg className='absolute -bottom-1 sm:-bottom-2 left-0 w-full' height='12' viewBox='0 0 400 12' fill='none' preserveAspectRatio='none'>
+            <path d='M3 8C90 3 320 3 397 8' stroke='var(--color-accent)' strokeWidth='3' strokeLinecap='round' opacity='0.85' />
+          </svg>
         </span>
-      </h1>
+        .
+      </motion.h1>
 
-      {/* Description */}
-      <p className='text-gray-500 text-base md:text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10 mt-6'>
-        Role-based mock interviews with smart follow-ups, adaptive difficulty and real-time performance evaluation.
-      </p>
+      {/* subhead */}
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.6 }}
+        className='text-muted text-base md:text-lg leading-relaxed mt-8 max-w-xl'
+      >
+        A voice-first AI interviewer that asks role-specific questions, fires back
+        live follow-ups, and scores you the way a hiring panel actually would.
+      </motion.p>
 
-      {/* Buttons */}
-      <div className='flex flex-wrap items-center justify-center gap-4'>
+      {/* CTAs */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 0.6 }}
+        className='flex flex-wrap items-center justify-center gap-3 mt-9'
+      >
         <motion.button
-          whileHover={{ scale: 1.03, y: -1 }}
+          whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          onClick={()=>navigate('/interview')}
-          className='bg-black text-white hover:bg-neutral-800 text-sm md:text-base font-semibold px-8 py-3.5 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer'
+          onClick={() => navigate('/interview')}
+          className='btn-accent group inline-flex items-center gap-2 px-7 py-3.5 text-[15px]'
         >
-          Start Interview
+          Start an interview
+          <HiArrowUpRight className='group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform' size={17} />
         </motion.button>
         <motion.button
-          whileHover={{ scale: 1.03, y: -1 }}
+          whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={onViewHistory}
-          className='bg-white text-gray-700 hover:text-black hover:bg-gray-50 text-sm md:text-base font-semibold px-8 py-3.5 rounded-full border border-gray-200 shadow-sm transition-all duration-300 cursor-pointer'
+          className='btn-ghost px-7 py-3.5 text-[15px]'
         >
-          View History
+          View history
         </motion.button>
-      </div>
-    </motion.div>
+      </motion.div>
+
+      {/* live, self-playing demo */}
+      <motion.div
+        initial={{ opacity: 0, y: 30, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ delay: 0.4, duration: 0.8, ease: 'easeOut' }}
+        className='w-full max-w-2xl mt-16'
+      >
+        {/* caption above the panel */}
+        <div className='flex items-center justify-center gap-3 mb-4'>
+          <span className='h-px w-10 bg-line' />
+          <span className='label-mono'>this is a real session, playing live</span>
+          <span className='h-px w-10 bg-line' />
+        </div>
+        <LiveInterview />
+      </motion.div>
+    </div>
   )
 }
 

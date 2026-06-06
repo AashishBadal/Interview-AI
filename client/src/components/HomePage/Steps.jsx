@@ -2,57 +2,90 @@ import React from 'react'
 import { motion } from 'motion/react'
 import { BsRobot, BsMic, BsClock } from 'react-icons/bs'
 
+const steps = [
+  {
+    n: '01',
+    icon: BsRobot,
+    title: 'Set the room',
+    body: 'Pick a job role and seniority — or drop your resume and let the AI pull questions straight from your real projects. Difficulty calibrates to match.',
+  },
+  {
+    n: '02',
+    icon: BsMic,
+    title: 'Speak, don\'t type',
+    body: 'A voice interviewer asks, listens, and reacts in real time with dynamic follow-ups — exactly like a human panel probing for depth.',
+  },
+  {
+    n: '03',
+    icon: BsClock,
+    title: 'Get graded',
+    body: 'Per-question timers recreate real pressure. The moment you finish, you get scored on communication, correctness and confidence — plus a PDF.',
+  },
+]
+
+const SectionHeading = ({ index, label, title, sub }) => (
+  <div className='mb-14'>
+    <div className='flex items-center gap-4 mb-6'>
+      <span className='label-mono'>{index}</span>
+      <span className='flex-1 h-px bg-line' />
+      <span className='label-mono'>{label}</span>
+    </div>
+    <h2 className='font-display text-3xl md:text-5xl font-semibold tracking-tight text-balance max-w-2xl'>
+      {title}
+    </h2>
+    {sub && <p className='text-muted mt-4 max-w-xl'>{sub}</p>}
+  </div>
+)
+
 const Steps = () => {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
-      className='grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 max-w-5xl w-full mt-12 md:mt-16 px-4 pb-12'
-    >
-      {/* Card 1 */}
-      <motion.div
-        whileHover={{ y: -8, scale: 1.02 }}
-        transition={{ type: "spring", stiffness: 300, damping: 20 }}
-        className='bg-white border-2 border-gray-200/60 hover:border-[#10b981] rounded-3xl p-8 pt-12 shadow-lg md:-rotate-3 flex flex-col items-center text-center relative transition-all duration-300'
-      >
-        <div className='absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 bg-white border-2 border-[#10b981] rounded-2xl flex items-center justify-center shadow-md'>
-          <BsRobot className='text-[#10b981]' size={22} />
-        </div>
-        <span className='text-[#10b981] text-xs font-bold tracking-wider uppercase mb-2'>Step 1</span>
-        <h3 className='text-gray-900 font-bold text-lg mb-3'>Role & Experience Selection</h3>
-        <p className='text-gray-500 text-sm leading-relaxed max-w-[240px]'>AI adjusts difficulty based on selected job role.</p>
-      </motion.div>
+    <div className='w-full max-w-5xl mt-28 md:mt-40 px-2'>
+      <SectionHeading
+        index='// 01'
+        label='how it works'
+        title='Three steps from cold to interview-ready.'
+      />
 
-      {/* Card 2 */}
-      <motion.div
-        whileHover={{ y: -8, scale: 1.02 }}
-        transition={{ type: "spring", stiffness: 300, damping: 20 }}
-        className='bg-white border-2 border-gray-200/60 hover:border-[#10b981] rounded-3xl p-8 pt-12 shadow-lg md:rotate-1 flex flex-col items-center text-center relative transition-all duration-300'
-      >
-        <div className='absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 bg-white border-2 border-[#10b981] rounded-2xl flex items-center justify-center shadow-md'>
-          <BsMic className='text-[#10b981]' size={22} />
-        </div>
-        <span className='text-[#10b981] text-xs font-bold tracking-wider uppercase mb-2'>Step 2</span>
-        <h3 className='text-gray-900 font-bold text-lg mb-3'>Smart Voice Interview</h3>
-        <p className='text-gray-500 text-sm leading-relaxed max-w-[240px]'>Dynamic follow-up questions based on your answers.</p>
-      </motion.div>
+      <div className='relative'>
+        {/* connecting vertical line */}
+        <span className='absolute left-[27px] md:left-[39px] top-4 bottom-4 w-px bg-line hidden sm:block' />
 
-      {/* Card 3 */}
-      <motion.div
-        whileHover={{ y: -8, scale: 1.02 }}
-        transition={{ type: "spring", stiffness: 300, damping: 20 }}
-        className='bg-white border-2 border-gray-200/60 hover:border-[#10b981] rounded-3xl p-8 pt-12 shadow-lg md:-rotate-1 flex flex-col items-center text-center relative transition-all duration-300'
-      >
-        <div className='absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 bg-white border-2 border-[#10b981] rounded-2xl flex items-center justify-center shadow-md'>
-          <BsClock className='text-[#10b981]' size={22} />
+        <div className='space-y-4'>
+          {steps.map((step, i) => {
+            const Icon = step.icon
+            return (
+              <motion.div
+                key={step.n}
+                initial={{ opacity: 0, x: -16 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: '-80px' }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className='group relative flex items-start gap-6 md:gap-8 card p-6 md:p-7 hover:border-line-strong transition-colors'
+              >
+                {/* index node */}
+                <div className='relative shrink-0 flex items-center justify-center'>
+                  <div className='w-14 h-14 md:w-20 md:h-20 rounded-2xl bg-surface-2 border border-line flex items-center justify-center group-hover:border-accent transition-colors'>
+                    <span className='font-display text-xl md:text-3xl font-semibold text-surface-3 group-hover:text-accent transition-colors'>
+                      {step.n}
+                    </span>
+                  </div>
+                </div>
+
+                <div className='flex-1 pt-1'>
+                  <div className='flex items-center gap-2.5 mb-2 text-muted group-hover:text-accent transition-colors'>
+                    <Icon size={16} />
+                    <h3 className='font-display text-lg md:text-xl font-semibold text-ink'>{step.title}</h3>
+                  </div>
+                  <p className='text-muted text-sm md:text-[15px] leading-relaxed max-w-2xl'>{step.body}</p>
+                </div>
+              </motion.div>
+            )
+          })}
         </div>
-        <span className='text-[#10b981] text-xs font-bold tracking-wider uppercase mb-2'>Step 3</span>
-        <h3 className='text-gray-900 font-bold text-lg mb-3'>Timer Based Simulation</h3>
-        <p className='text-gray-500 text-sm leading-relaxed max-w-[240px]'>Real interview pressure with time tracking.</p>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   )
 }
 
+export { SectionHeading }
 export default Steps

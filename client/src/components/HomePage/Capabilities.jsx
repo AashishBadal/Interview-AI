@@ -1,101 +1,133 @@
 import React from 'react'
 import { motion } from 'motion/react'
-import { BsBarChart, BsFileEarmarkText } from 'react-icons/bs'
-import aiAnsImg from '../../assets/ai-ans.png'
+import { BsBarChart, BsFileEarmarkText, BsFiletypePdf, BsClockHistory } from 'react-icons/bs'
 import resumeImg from '../../assets/resume.png'
 import pdfImg from '../../assets/pdf.png'
-import historyImg from '../../assets/history.png'
+import { SectionHeading } from './Steps'
+
+const tile = 'card p-6 md:p-7 hover:border-line-strong transition-colors flex flex-col group'
 
 const Capabilities = () => {
   return (
-    <>
-      {/* Advanced AI Capabilities Section */}
-      <h2 className='text-3xl md:text-5xl font-bold text-gray-900 text-center tracking-tight mb-12 mt-12 md:mt-16'>
-        Advanced AI <span className='text-[#10b981]'>Capabilities</span>
-      </h2>
+    <div className='w-full max-w-5xl mt-28 md:mt-40 px-2'>
+      <SectionHeading
+        index='// 02'
+        label='capabilities'
+        title='Built like a real interviewer, not a quiz.'
+        sub='Every session is scored, explained and saved — so practice actually compounds.'
+      />
 
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl w-full px-4 pb-12'>
-        {/* Card 1 */}
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 md:auto-rows-[210px]'>
+        {/* A — wide feature: live scoring */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className='bg-white rounded-3xl p-6 md:p-8 border border-gray-200/50 shadow-md hover:shadow-xl hover:border-[#10b981]/50 transition-all duration-300 flex flex-col sm:flex-row items-center gap-6'
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.5 }}
+          className={`${tile} md:col-span-2 justify-between`}
         >
-          <div className='w-full sm:w-1/2 flex justify-center'>
-            <img src={aiAnsImg} alt="AI Answer Evaluation" className='w-full max-w-[160px] h-auto object-contain' />
-          </div>
-          <div className='w-full sm:w-1/2 flex flex-col items-start text-left gap-2'>
-            <div className='bg-[#e6fcf5] text-[#0ca678] p-2.5 rounded-xl flex items-center justify-center shadow-sm'>
-              <BsBarChart size={18} />
+          <div className='flex items-center justify-between'>
+            <div className='flex items-center gap-2 text-accent'>
+              <BsBarChart size={15} />
+              <span className='label-mono !text-accent/80'>scoring</span>
             </div>
-            <h3 className='font-bold text-gray-900 text-lg mt-1'>AI Answer Evaluation</h3>
-            <p className='text-gray-500 text-sm leading-relaxed'>Scores communication, technical accuracy and confidence.</p>
+            <span className='label-mono'>per answer</span>
+          </div>
+          <div>
+            <h3 className='font-display font-semibold text-lg mb-4'>AI answer evaluation</h3>
+            <div className='space-y-2.5'>
+              {[['Communication', 84], ['Technical accuracy', 79], ['Confidence', 81]].map(([label, val]) => (
+                <div key={label} className='flex items-center gap-3'>
+                  <span className='text-xs text-muted w-36 shrink-0'>{label}</span>
+                  <div className='flex-1 h-1.5 rounded-full bg-surface-3 overflow-hidden'>
+                    <motion.div
+                      initial={{ width: 0 }}
+                      whileInView={{ width: `${val}%` }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.9, ease: 'easeOut' }}
+                      className='h-full bg-accent rounded-full'
+                    />
+                  </div>
+                  <span className='font-mono text-xs text-ink w-8 text-right'>{(val / 10).toFixed(1)}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </motion.div>
 
-        {/* Card 2 */}
+        {/* B — tall: resume */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className='bg-white rounded-3xl p-6 md:p-8 border border-gray-200/50 shadow-md hover:shadow-xl hover:border-[#10b981]/50 transition-all duration-300 flex flex-col sm:flex-row items-center gap-6'
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.5, delay: 0.05 }}
+          className={`${tile} md:row-span-2 justify-between`}
         >
-          <div className='w-full sm:w-1/2 flex justify-center'>
-            <img src={resumeImg} alt="Resume Based Interview" className='w-full max-w-[160px] h-auto object-contain' />
-          </div>
-          <div className='w-full sm:w-1/2 flex flex-col items-start text-left gap-2'>
-            <div className='bg-[#e6fcf5] text-[#0ca678] p-2.5 rounded-xl flex items-center justify-center shadow-sm'>
-              <BsFileEarmarkText size={18} />
+          <div>
+            <div className='flex items-center gap-2 text-accent mb-4'>
+              <BsFileEarmarkText size={15} />
+              <span className='label-mono !text-accent/80'>resume</span>
             </div>
-            <h3 className='font-bold text-gray-900 text-lg mt-1'>Resume Based Interview</h3>
-            <p className='text-gray-500 text-sm leading-relaxed'>Project-specific questions based on uploaded resume.</p>
+            <h3 className='font-display font-semibold text-lg mb-2'>Resume-based interview</h3>
+            <p className='text-muted text-sm leading-relaxed'>Upload a resume and get questions drawn from your actual projects and stack.</p>
+          </div>
+          <div className='mt-6 rounded-2xl bg-gradient-to-br from-zinc-100 to-zinc-300 p-6 flex items-center justify-center group-hover:scale-[1.02] transition-transform'>
+            <img src={resumeImg} alt='Resume based interview' className='w-28 h-28 object-contain' />
           </div>
         </motion.div>
 
-        {/* Card 3 */}
+        {/* C — pdf report */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className='bg-white rounded-3xl p-6 md:p-8 border border-gray-200/50 shadow-md hover:shadow-xl hover:border-[#10b981]/50 transition-all duration-300 flex flex-col sm:flex-row items-center gap-6'
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className={`${tile} justify-between`}
         >
-          <div className='w-full sm:w-1/2 flex justify-center'>
-            <img src={pdfImg} alt="Downloadable PDF Report" className='w-full max-w-[160px] h-auto object-contain' />
-          </div>
-          <div className='w-full sm:w-1/2 flex flex-col items-start text-left gap-2'>
-            <div className='bg-[#e6fcf5] text-[#0ca678] p-2.5 rounded-xl flex items-center justify-center shadow-sm'>
-              <BsFileEarmarkText size={18} />
+          <div className='flex items-start justify-between'>
+            <div className='flex items-center gap-2 text-accent'>
+              <BsFiletypePdf size={15} />
+              <span className='label-mono !text-accent/80'>report</span>
             </div>
-            <h3 className='font-bold text-gray-900 text-lg mt-1'>Downloadable PDF Report</h3>
-            <p className='text-gray-500 text-sm leading-relaxed'>Detailed strengths, weaknesses and improvement insights.</p>
+            <img src={pdfImg} alt='' className='w-12 h-12 object-contain opacity-90 group-hover:scale-110 transition-transform' />
+          </div>
+          <div>
+            <h3 className='font-display font-semibold text-base mb-1.5'>Downloadable PDF</h3>
+            <p className='text-muted text-sm leading-relaxed'>Strengths, gaps and concrete next steps in a shareable report.</p>
           </div>
         </motion.div>
 
-        {/* Card 4 */}
+        {/* D — history with mini bar chart */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className='bg-white rounded-3xl p-6 md:p-8 border border-gray-200/50 shadow-md hover:shadow-xl hover:border-[#10b981]/50 transition-all duration-300 flex flex-col sm:flex-row items-center gap-6'
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className={`${tile} justify-between`}
         >
-          <div className='w-full sm:w-1/2 flex justify-center'>
-            <img src={historyImg} alt="History & Analytics" className='w-full max-w-[160px] h-auto object-contain' />
+          <div className='flex items-center gap-2 text-accent'>
+            <BsClockHistory size={15} />
+            <span className='label-mono !text-accent/80'>analytics</span>
           </div>
-          <div className='w-full sm:w-1/2 flex flex-col items-start text-left gap-2'>
-            <div className='bg-[#e6fcf5] text-[#0ca678] p-2.5 rounded-xl flex items-center justify-center shadow-sm'>
-              <BsBarChart size={18} />
-            </div>
-            <h3 className='font-bold text-gray-900 text-lg mt-1'>History & Analytics</h3>
-            <p className='text-gray-500 text-sm leading-relaxed'>Track progress with performance graphs and topic analysis.</p>
+          <div className='flex items-end gap-1.5 h-12'>
+            {[40, 55, 48, 70, 64, 88].map((h, i) => (
+              <motion.span
+                key={i}
+                initial={{ height: 0 }}
+                whileInView={{ height: `${h}%` }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.06, ease: 'easeOut' }}
+                className={`flex-1 rounded-t ${i === 5 ? 'bg-accent' : 'bg-surface-3'}`}
+              />
+            ))}
+          </div>
+          <div>
+            <h3 className='font-display font-semibold text-base mb-1.5'>History & analytics</h3>
+            <p className='text-muted text-sm leading-relaxed'>Watch your scores trend up over every session.</p>
           </div>
         </motion.div>
       </div>
-    </>
+    </div>
   )
 }
 

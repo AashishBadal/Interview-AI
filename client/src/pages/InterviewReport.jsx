@@ -23,8 +23,8 @@ const InterviewReport = () => {
 
   if(!report){
     return(
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-500 text-lg">Loading Report...</p>
+      <div className="min-h-screen bg-bg flex items-center justify-center">
+        <p className="label-mono animate-pulse">loading report…</p>
       </div>
     )
   }

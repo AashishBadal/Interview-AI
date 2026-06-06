@@ -1,6 +1,6 @@
 import express from 'express'
 import {upload} from "../middlewares/multer.js";
-import { analyseResume, finishInterview, generateQuestions, getInterviewReport, getMyInterviews, submitAnswer } from '../controllers/interview.controller.js';
+import { analyseResume, deleteInterview, finishInterview, generateQuestions, getInterviewReport, getInterviewToResume, getMyInterviews, submitAnswer } from '../controllers/interview.controller.js';
 import {isAuth} from '../middlewares/isAuth.middleware.js';
 
 const interviewRouter = express.Router();
@@ -16,6 +16,10 @@ interviewRouter.post("/finish",isAuth,finishInterview);
 interviewRouter.get("/get-interview",isAuth,getMyInterviews);
 
 interviewRouter.get("/report/:id",isAuth,getInterviewReport);
+
+interviewRouter.get("/resume/:id",isAuth,getInterviewToResume);
+
+interviewRouter.delete("/:id",isAuth,deleteInterview);
 
 
 
