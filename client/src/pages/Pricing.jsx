@@ -7,12 +7,14 @@ import { ServerUrl } from '../App';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setUserData } from '../redux/userSlice';
+import Modal from '../components/Modal';
 
 const Pricing = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [selectedPlan, setSelectedPlan] = useState("free")
   const [loadingPlan, setLoadingPlan] = useState(null)
+  const [popup, setPopup] = useState(null) // { variant, title, message, onClose }
 
 
   const plans = [
@@ -90,15 +92,27 @@ const Pricing = () => {
             });
             
             if (verifyResult.data.success) {
-              alert("Payment verified successfully! Credits added.");
               dispatch(setUserData(verifyResult.data.user));
-              navigate("/");
+              setPopup({
+                variant: "success",
+                title: "Payment successful",
+                message: `Your ${plan.credits} credits have been added to your account. Happy practicing!`,
+                onClose: () => { setPopup(null); navigate("/"); }
+              });
             } else {
-              alert(verifyResult.data.message || "Payment verification failed.");
+              setPopup({
+                variant: "error",
+                title: "Payment verification failed",
+                message: verifyResult.data.message || "We couldn't verify your payment. If you were charged, please contact support."
+              });
             }
           } catch (err) {
             console.error(err);
-            alert(err.response?.data?.message || "Payment verification failed.");
+            setPopup({
+              variant: "error",
+              title: "Payment verification failed",
+              message: err.response?.data?.message || "We couldn't verify your payment. If you were charged, please contact support."
+            });
           }
         },
         theme: {
@@ -112,7 +126,11 @@ const Pricing = () => {
 
     } catch (error) {
       console.error(error)
-      alert(error.response?.data?.message || "Order creation failed.");
+      setPopup({
+        variant: "error",
+        title: "Order failed",
+        message: error.response?.data?.message || "We couldn't create your order. Please try again."
+      });
       setLoadingPlan(null);
     }
   }
@@ -212,6 +230,16 @@ const Pricing = () => {
           })}
         </div>
       </div>
+
+      <Modal
+        open={!!popup}
+        onClose={popup?.onClose || (() => setPopup(null))}
+        onConfirm={popup?.onClose || (() => setPopup(null))}
+        variant={popup?.variant || "info"}
+        title={popup?.title}
+        message={popup?.message}
+        confirmText={popup?.variant === "success" ? "Continue" : "Got it"}
+      />
     </div>
   )
 }

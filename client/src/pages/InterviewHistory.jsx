@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { ServerUrl } from '../App';
 import axios from 'axios';
-import { FaArrowLeft, FaRegTrashCan, FaArrowRotateLeft, FaArrowRight } from 'react-icons/fa6';
+import { FaArrowLeft, FaRegTrashCan, FaArrowRotateLeft, FaArrowRight, FaPlus } from 'react-icons/fa6';
+import Modal from '../components/Modal';
 
 const InterviewHistory = () => {
     const [interviews, setInterviews] = useState([]);
     const [deletingId, setDeletingId] = useState(null);
+    const [confirmId, setConfirmId] = useState(null);
     const navigate = useNavigate()
     const getMyInterviews = async () => {
         try {
@@ -31,13 +33,19 @@ const InterviewHistory = () => {
         }
     }
 
-    const handleDelete = async (e, id) => {
+    const requestDelete = (e, id) => {
         e.stopPropagation();
-        if (!window.confirm("Delete this interview permanently? This cannot be undone.")) return;
+        setConfirmId(id);
+    }
+
+    const handleDelete = async () => {
+        const id = confirmId;
+        if (!id) return;
         setDeletingId(id);
         try {
             await axios.delete(`${ServerUrl}/interview/${id}`, { withCredentials: true });
             setInterviews((prev) => prev.filter((i) => i._id !== id));
+            setConfirmId(null);
         } catch (error) {
             console.log(error);
         } finally {
@@ -57,11 +65,21 @@ const InterviewHistory = () => {
                         <h1 className='font-display text-3xl sm:text-4xl font-semibold tracking-tight mt-2'>Interview History</h1>
                         <p className='text-muted mt-1.5 text-sm'>Track your past interview reports</p>
                     </div>
+                    <button
+                        onClick={() => navigate('/interview')}
+                        className='btn-accent ml-auto mt-1 py-3 px-5 text-sm flex items-center gap-2 text-nowrap'>
+                        <FaPlus size={13} /> Start new interview
+                    </button>
                 </div>
                 {interviews.length === 0 ? (
                     <div className='card p-12 text-center'>
                         <p className='label-mono mb-2'>empty</p>
                         <p className='text-muted'>No interviews yet — start your first one.</p>
+                        <button
+                            onClick={() => navigate('/interview')}
+                            className='btn-accent mt-6 py-3 px-6 text-sm inline-flex items-center gap-2'>
+                            <FaPlus size={13} /> Start new interview
+                        </button>
                     </div>
                 ) : (
                     <div className='grid gap-3'>
@@ -97,7 +115,7 @@ const InterviewHistory = () => {
 
                                         {/* delete */}
                                         <button
-                                            onClick={(e) => handleDelete(e, interview._id)}
+                                            onClick={(e) => requestDelete(e, interview._id)}
                                             disabled={deletingId === interview._id}
                                             aria-label='Delete interview'
                                             className='w-10 h-10 flex items-center justify-center rounded-full border border-line text-muted hover:text-bad hover:border-bad/40 hover:bg-bad/10 transition disabled:opacity-50'>
@@ -111,6 +129,20 @@ const InterviewHistory = () => {
                     </div>
                 )}
             </div>
+
+            <Modal
+                open={!!confirmId}
+                onClose={() => setConfirmId(null)}
+                variant='confirm'
+                title='Delete interview?'
+                message='This interview and its report will be permanently removed. This action cannot be undone.'
+                showCancel
+                cancelText='Cancel'
+                confirmText='Delete'
+                danger
+                loading={deletingId === confirmId}
+                onConfirm={handleDelete}
+            />
         </div>
     )
 }

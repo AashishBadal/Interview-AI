@@ -9,6 +9,7 @@ import Interview from './pages/InterviewPage';
 import InterviewHistory from './pages/InterviewHistory';
 import InterviewReport from './pages/InterviewReport';
 import Pricing from './pages/Pricing';
+import ProtectedRoute from './components/ProtectedRoute';
 
 export const ServerUrl = "http://localhost:3000/api";
 
@@ -33,10 +34,10 @@ const App = () => {
     <Routes>
       <Route path='/' element={<Home/>}/>
       <Route path='/auth' element={<Auth/>}/>
-      <Route path='/interview' element={<Interview/>}/>
-      <Route path='/history' element={<InterviewHistory/>}/>
-      <Route path='/pricing' element={<Pricing/>}/> 
-      <Route path='/report/:id' element={<InterviewReport/>}/>
+      <Route path='/interview' element={<ProtectedRoute><Interview/></ProtectedRoute>}/>
+      <Route path='/history' element={<ProtectedRoute><InterviewHistory/></ProtectedRoute>}/>
+      <Route path='/pricing' element={<ProtectedRoute><Pricing/></ProtectedRoute>}/>
+      <Route path='/report/:id' element={<ProtectedRoute><InterviewReport/></ProtectedRoute>}/>
     </Routes>
     </>
   )

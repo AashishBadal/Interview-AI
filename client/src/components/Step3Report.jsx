@@ -191,16 +191,17 @@ const Step3Report = ({ report }) => {
     autoTable(doc, {
       startY: tableStartY,
       margin: { left: margin, right: margin },
-      head: [["#", "Question", "Score", "Feedback"]],
+      head: [["#", "Question", "Score", "Feedback", "Suggested Answer"]],
       body: questionWiseScore.map((q, i) => [
         `${i + 1}`,
         q.question,
         `${q.score}/10`,
-        q.feedback && q.feedback.trim() !== "" ? q.feedback : "No feedback available."
+        q.feedback && q.feedback.trim() !== "" ? q.feedback : "No feedback available.",
+        q.suggestedAnswer && q.suggestedAnswer.trim() !== "" ? q.suggestedAnswer : "No suggested answer available."
       ]),
       styles: {
-        fontSize: 9,
-        cellPadding: 5,
+        fontSize: 8.5,
+        cellPadding: 4,
         valign: "top",
         overflow: "linebreak"
       },
@@ -211,10 +212,11 @@ const Step3Report = ({ report }) => {
         halign: "left"
       },
       columnStyles: {
-        0: { cellWidth: 10, halign: "center" }, // index
-        1: { cellWidth: 50 }, // question
-        2: { cellWidth: 20, halign: "center" }, // score
-        3: { cellWidth: 90 } // feedback (sum = 10+50+20+90 = 170 = contentWidth)
+        0: { cellWidth: 8, halign: "center" }, // index
+        1: { cellWidth: 40 }, // question
+        2: { cellWidth: 15, halign: "center" }, // score
+        3: { cellWidth: 52 }, // feedback
+        4: { cellWidth: 55 } // suggested answer (sum = 8+40+15+52+55 = 170 = contentWidth)
       },
       alternateRowStyles: {
         fillColor: [249, 250, 251]
