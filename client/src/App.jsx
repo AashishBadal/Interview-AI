@@ -11,7 +11,7 @@ import InterviewReport from './pages/InterviewReport';
 import Pricing from './pages/Pricing';
 import ProtectedRoute from './components/ProtectedRoute';
 
-export const ServerUrl = "http://localhost:3000/api";
+export const ServerUrl = "https://interview-ai-backend-fiog.onrender.com/";
 
 const App = () => {
 
